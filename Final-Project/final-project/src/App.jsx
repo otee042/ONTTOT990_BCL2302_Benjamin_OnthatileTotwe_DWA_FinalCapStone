@@ -1,11 +1,16 @@
 import React from "react"
-import './App.css'
+import Header from "../components/header/header"
+import Main from "../components/Main/Main"
+// import SignInForm from "../components/Form/SignInForm"
+// import './App.css'
 
 function App() {
 
   return (
     <>
-    
+     {/* <SignInForm/> */}
+     <Header/>
+     <Main/>
     </>
   )
 }
