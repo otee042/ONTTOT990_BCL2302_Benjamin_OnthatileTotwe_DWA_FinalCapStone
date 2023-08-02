@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import "../Header/header.css"; // Import the CSS file
-import { SlButton } from '@shoelace-style/shoelace/dist/react';
+import { SlButton, SlInput } from '@shoelace-style/shoelace/dist/react';
+
 
 
 const Header = () => {
@@ -13,26 +14,7 @@ const Header = () => {
     setSortingOrder((prevSortingOrder) => 
       prevSortingOrder === 'A-Z' ? 'Z-A' : 'A-Z'
     );
-    // const App = () => (
-    //   <>
-    //     <SlButton variant="default" outline>
-    //       Default
-    //     </SlButton>
-    //     <SlButton variant="primary" outline>
-    //       Primary
-    //     </SlButton>
-    //     <SlButton variant="success" outline>
-    //       Success
-    //     </SlButton>
-    //     <SlButton variant="neutral" outline>
-    //       Neutral
-    //     </SlButton>
-    //     <SlButton variant="warning" outline>
-    //       Warning
-    //     </SlButton>
 
-    //   </>
-    // );
     
   };
 
@@ -43,20 +25,19 @@ const Header = () => {
       </div>
       <nav className="navbar">
         <ul className="navList">
-          <li className="navItem">Home</li>
-          <li className="navItem">About</li>
-          <SlButton variant="warning" outline>
-          Warning
-        </SlButton>
-        <SlButton variant="default">Default</SlButton>
-        <SlButton variant="primary">Primary</SlButton>
+
+        <SlButton variant="primary">Home</SlButton>
+        <SlButton variant="primary">About</SlButton>
+
+        
           {/* Add more navigation items as needed */}
         </ul>
       </nav>
       {/* Button to toggle sorting order */}
-      <button onClick={handleSortingClick} className="sortingButton">
-        Sort {sortingOrder === 'A-Z' ? 'A-Z' : 'Z-A'}
-      </button>
+      <div className='searchButton'>
+          <SlInput  type='text'  placeholder='Search Podcast' width='30px'/>
+          <SlButton variant="primary">Search</SlButton>
+      </div>
     </header>
   );
 };
