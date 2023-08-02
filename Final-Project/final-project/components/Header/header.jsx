@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import "../Header/header.css"; // Import the CSS file
+import { SlButton } from '@shoelace-style/shoelace/dist/react';
+
 
 const Header = () => {
   // State variable to keep track of the current sorting order
@@ -11,6 +13,27 @@ const Header = () => {
     setSortingOrder((prevSortingOrder) => 
       prevSortingOrder === 'A-Z' ? 'Z-A' : 'A-Z'
     );
+    // const App = () => (
+    //   <>
+    //     <SlButton variant="default" outline>
+    //       Default
+    //     </SlButton>
+    //     <SlButton variant="primary" outline>
+    //       Primary
+    //     </SlButton>
+    //     <SlButton variant="success" outline>
+    //       Success
+    //     </SlButton>
+    //     <SlButton variant="neutral" outline>
+    //       Neutral
+    //     </SlButton>
+    //     <SlButton variant="warning" outline>
+    //       Warning
+    //     </SlButton>
+
+    //   </>
+    // );
+    
   };
 
   return (
@@ -22,6 +45,11 @@ const Header = () => {
         <ul className="navList">
           <li className="navItem">Home</li>
           <li className="navItem">About</li>
+          <SlButton variant="warning" outline>
+          Warning
+        </SlButton>
+        <SlButton variant="default">Default</SlButton>
+        <SlButton variant="primary">Primary</SlButton>
           {/* Add more navigation items as needed */}
         </ul>
       </nav>

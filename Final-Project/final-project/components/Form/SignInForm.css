@@ -1,64 +1,82 @@
-/* SignInForm.css */
-.signin-form {
+
+/* Style for the podcast app container */
+.podcast-app {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+
+.podcast-item{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* Style for each podcast show */
+.podcast-show {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.podcast-image{
+  width: 250px;
+}
+
+.podcast-show h3 {
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+
+.podcast-show p {
+  margin-bottom: 0;
+}
+
+/* Style for the podcast app heading */
+.podcast-app h2 {
+  text-align: center;
+}
+
+/* Style for the sign-in form container */
+.signin-form-container {
   max-width: 400px;
   margin: 0 auto;
-  padding: 40px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background-color: #f9f9f9;
+  padding: 20px;
 }
 
-h2 {
+.signin-form h2 {
   text-align: center;
-  margin-bottom: 30px;
-  font-size: 24px;
-  color: #333;
 }
 
-.form-group {
-  margin-bottom: 20px;
-}
-
-label {
-  display: block;
-  font-weight: bold;
+.signin-form .form-group {
   margin-bottom: 10px;
-  color: #555;
 }
 
-input {
+.signin-form label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.signin-form input {
   width: 100%;
-  padding: 12px;
+  padding: 10px;
   font-size: 16px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: border-color 0.3s ease-in-out;
 }
 
-input:focus {
-  outline: none;
-  border-color: #007bff;
-}
-
-button {
+.signin-form button {
   width: 100%;
-  padding: 12px;
+  padding: 10px;
   font-size: 16px;
-  color: #fff;
   background-color: #007bff;
+  color: #fff;
   border: none;
-  border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.3s ease-in-out;
 }
 
-button:hover {
-  background-color: #0056b3;
-}
-
-button:active {
-  background-color: #003c80;
+/* Style for the success message */
+.signin-form p {
+  text-align: center;
+  color: green;
+  font-weight: bold;
 }

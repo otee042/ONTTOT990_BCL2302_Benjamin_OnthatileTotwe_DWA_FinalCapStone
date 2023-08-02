@@ -1,47 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import '../Main/Main.css';
+import React, { useEffect, useState } from "react";
+import "../Main/Main.css";
 
-const Main = () => {
+const Podcast = () => {
   const [podcasts, setPodcasts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
-    setLoading(true);
-    setError(null);
-
-    // Fetch data from the API
-    fetch('https://podcast-api.netlify.app/shows')
-      .then((res) => res.json())
-      .then((data) => {
-        setPodcasts(data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        setError('Error fetching data.');
-        setLoading(false);
-        console.error('Error fetching data:', error);
-      });
+    // Fetch data from the API after signing in 
+    fetch("https://podcast-api.netlify.app/shows")
+      .then((response) => response.json())
+      .then((data) => setPodcasts(data));
   }, []);
 
   return (
-    <div className="podcast-container">
-      {loading ? (
-        <div className="loading">Loading...</div>
-      ) : error ? (
-        <div className="error">{error}</div>
-      ) : (
-        <div className="podcast-list">
-          {podcasts.map((podcast) => (
-            <div key={podcast.id} className="podcast-card">
-              {podcast.image && <img src={podcast.image} alt={podcast.title} />}
-              <h2>{podcast.title}</h2>
-            </div>
-          ))}
+    <div className="Middle-con">
+          <div className="podcast-list">
+            {podcasts.map((podcast) => (
+              <div key={podcast.id} className="podcast-card">
+                {podcast.image && <img src={podcast.image} alt={podcast.title} />}
+                <h2>{podcast.title}</h2>
+                <h3>{podcast.genres}</h3>
+                <h3>Seasons:{podcast.seasons}</h3>
+                {/* <p>{podcast.description}</p> */}
+              </div>
+            ))}
+          </div>
         </div>
-      )}
-    </div>
   );
 };
 
-export default Main;
+export default Podcast;

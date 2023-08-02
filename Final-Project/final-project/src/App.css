@@ -1,0 +1,40 @@
+/* Update podcast-app-container to use flexbox */
+podcast-app-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  
+    /* Flexbox properties */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  h2 {
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 24px;
+    color: #333;
+    width: 100%; /* Make sure the heading spans the entire width */
+  }
+  
+  ul {
+    list-style: none;
+    padding: 0;
+    width: 100%; /* Make sure the ul spans the entire width */
+  }
+  
+  li {
+    width: calc(25% - 20px); /* Calculate the width to display 4 cards on each row with 20px spacing */
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    color: #333;
+    box-sizing: border-box; /* Include padding and border in the width calculation */
+  }
+  
+  li:last-child {
+    border-bottom: none;
+  }
+  
