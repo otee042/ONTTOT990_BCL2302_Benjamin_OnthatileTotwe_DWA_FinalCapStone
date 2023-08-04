@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import SigninForm from "../components/Form/SignInForm";
 import PodcastApp from "../components/Main/Main";
 import '@shoelace-style/shoelace/dist/themes/light.css';
 import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path';
@@ -13,6 +12,7 @@ import { SlButton } from '@shoelace-style/shoelace/dist/react';
 function App() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  
 
   const handleLogin = () => {
 
@@ -49,9 +49,7 @@ function App() {
         <>
         <Header />
         <PodcastApp />
-        <SlButton variant="default" outline onClick={handleLogOut}>
-      Logout
-    </SlButton>
+        <SlButton variant="primary" onClick={handleLogOut}>Logout</SlButton>
         </>
       ) : (
         <Signin onLogin={handleLogin} />
