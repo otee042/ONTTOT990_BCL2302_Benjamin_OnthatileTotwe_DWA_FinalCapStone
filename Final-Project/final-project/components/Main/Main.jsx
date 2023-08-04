@@ -31,8 +31,6 @@ const Podcast = () => {
     return genreIds.map((id) => genres[id - 1]).join(",");
   };
 
-  
-
   return (
     <div className="Middle-con">
       <div className="podcast-list">
