@@ -28,12 +28,8 @@ const Header = () => {
 
         <SlButton variant="primary">Home</SlButton>
         <SlButton variant="primary">About</SlButton>
-
-        
-          {/* Add more navigation items as needed */}
         </ul>
       </nav>
-      {/* Button to toggle sorting order */}
     </header>
   );
 };
