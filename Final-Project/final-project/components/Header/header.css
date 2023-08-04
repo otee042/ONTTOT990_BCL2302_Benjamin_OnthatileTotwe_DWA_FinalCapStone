@@ -34,4 +34,28 @@
     text-decoration: none;
     /* Add any other styles for navigation items here */
   }
+
+  .sort-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .sort-buttons button {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  
+  .sort-buttons button:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .sort-buttons button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
   

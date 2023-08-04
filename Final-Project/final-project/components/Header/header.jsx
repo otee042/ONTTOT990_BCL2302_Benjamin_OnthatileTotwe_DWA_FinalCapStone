@@ -21,7 +21,7 @@ const Header = () => {
   return (
     <header className="header">
       <div className="logo">
-        <img src="path_to_your_logo_image.png" alt="Podcast Logo" className="logoImg" />
+        <h2>Podcast Retro</h2>
       </div>
       <nav className="navbar">
         <ul className="navList">
