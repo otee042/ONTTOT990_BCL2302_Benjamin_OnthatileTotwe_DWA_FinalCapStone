@@ -16,6 +16,7 @@ const genres = [
 
 const Podcast = () => {
   const [podcasts, setPodcasts] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     // Fetch data from the API after signing in
@@ -31,10 +32,22 @@ const Podcast = () => {
     return genreIds.map((id) => genres[id - 1]).join(",");
   };
 
+  // Filter the podcasts based on the search query
+  const filteredPodcasts = podcasts.filter((podcast) =>
+    podcast.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="Middle-con">
+      <input
+        className="search-input"
+        type="text"
+        placeholder="Search by title..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
       <div className="podcast-list">
-        {podcasts.map((podcast) => (
+        {filteredPodcasts.map((podcast) => (
           <div key={podcast.id} className="podcast-card">
             {podcast.image && <img src={podcast.image} alt={podcast.title} />}
             <h2>{podcast.title}</h2>
