@@ -1,62 +1,123 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import Podcast from "../Main/Main";
 import Header from "../Header/header";
 import "./SigninForm.css";
+import supabase from '../../src/config/supabaseClient'
 
 const SigninForm = () => {
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
   const [message, setMessage] = useState("");
   const [isSignedIn, setIsSignedIn] = useState(false);
-  const [podcasts, setPodcasts] = useState([]);
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [signupMessage, setSignupMessage] = useState("");
 
-  const handleSignIn = (event) => {
+  const handleSignIn = async (event) => {
     event.preventDefault();
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
 
-    // Here, you can implement the logic to handle the sign-in process.
-    // For this example, we'll just log the email and password to the console.
-    console.log("Email:", email);
-    console.log("Password:", password);
+    try {
+      const { user, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        setMessage("Sign-in failed. Please check your credentials.");
+      } else {
+        setIsSignedIn(true);
+      }
+    } catch (error) {
+      console.error("Error signing in:", error.message);
+      setMessage("Sign-in failed. Please try again later.");
+    }
 
     // Clear the form fields after handling the form submission.
     emailRef.current.value = "";
     passwordRef.current.value = "";
+  };
 
-    // For this example, we'll just set isSignedIn to true to simulate a successful sign-in.
-    setIsSignedIn(true);
+  const handleSignUp = async (event) => {
+    event.preventDefault();
+    const email = emailRef.current.value;
+    const password = passwordRef.current.value;
 
-    // Display a success message to the user (You can replace this with your desired feedback mechanism).
-    setMessage("Sign-in successful!");
+    try {
+      const { user, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        setSignupMessage("Sign-up failed. Please try again with a different email.");
+      } else {
+        setIsSignUp(false);
+        setSignupMessage("Sign-up successful!");
+      }
+    } catch (error) {
+      console.error("Error signing up:", error.message);
+      setSignupMessage("Sign-up failed. Please try again later.");
+    }
+
+    // Clear the form fields after handling the form submission.
+    emailRef.current.value = "";
+    passwordRef.current.value = "";
   };
 
   if (isSignedIn) {
     // Render the podcast app if the user is signed in
     return (
-
       <div>
-        <Header/>
-        <Podcast/>
+        <Header />
+        <Podcast />
       </div>
     );
   }
 
   return (
     <div className="signin-form-container">
-      <form className="signin-form" onSubmit={handleSignIn}>
-        <h2>Sign In</h2>
-        <div className="form-group">
-          <label>Email</label>
-          <input type="email" ref={emailRef} required />
+      {isSignUp ? (
+        <div>
+          <h2>Sign Up</h2>
+          <form className="signin-form" onSubmit={handleSignUp}>
+            <div className="form-group">
+              <label>Email</label>
+              <input type="email" ref={emailRef} required />
+            </div>
+            <div className="form-group">
+              <label>Password</label>
+              <input type="password" ref={passwordRef} required />
+            </div>
+            <button type="submit">Sign Up</button>
+          </form>
+          {signupMessage && <p>{signupMessage}</p>}
+          <p>
+            Already have an account?{" "}
+            <button onClick={() => setIsSignUp(false)}>Sign In</button>
+          </p>
         </div>
-        <div className="form-group">
-          <label>Password</label>
-          <input type="password" ref={passwordRef} required />
+      ) : (
+        <div>
+          <h2>Sign In</h2>
+          <form className="signin-form" onSubmit={handleSignIn}>
+            <div className="form-group">
+              <label>Email</label>
+              <input type="email" ref={emailRef} required />
+            </div>
+            <div className="form-group">
+              <label>Password</label>
+              <input type="password" ref={passwordRef} required />
+            </div>
+            <button type="submit">Sign In</button>
+          </form>
+          {message && <p>{message}</p>}
+          <p>
+            Don't have an account?{" "}
+            <button onClick={() => setIsSignUp(true)}>Sign Up</button>
+          </p>
         </div>
-        <button type="submit">Sign In</button>
-      </form>
-      {message && <p>{message}</p>}
+      )}
     </div>
   );
 };

@@ -1,31 +1,60 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SigninForm from "../components/Form/SignInForm";
 import PodcastApp from "../components/Main/Main";
 import '@shoelace-style/shoelace/dist/themes/light.css';
 import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path';
+import supabase from "./config/supabaseClient";
 setBasePath('https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.6.0/cdn/');
-
+import Signin from "../components/Form/Signin";
+import Header from "../components/Header/header";
+import { SlButton } from '@shoelace-style/shoelace/dist/react';
 
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const handleSignIn = (email, password) => {
-    // In a real-world scenario, you would perform authentication here.
-    // For this example, we'll assume the user is authenticated if the email is "user@example.com" and the password is "password".
-    if (email === "user@example.com" && password === "password") {
-      setIsAuthenticated(true);
-    } else {
-      alert("Invalid credentials. Please try again.");
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  const handleLogin = () => {
+
+    setIsLoggedIn(true)
+    console.log('In')
+
+  }
+
+  const handleLogOut = () => {
+
+    try{
+
+      supabase.auth.signOut()
+      setIsLoggedIn(false)
+      console.log('off')
+    }catch(error){
+
+      console.error('Error logging out: ', error.messsage)
     }
-  };
+  }
+
+  useEffect(()=>{
+
+    if(isLoggedIn){
+      setIsLoggedIn(true)
+    }else{
+      setIsLoggedIn(false)
+    }
+  }, [isLoggedIn])
 
   return (
     <div className="App">
-      {isAuthenticated ? (
+      {isLoggedIn ? (
+        <>
+        <Header />
         <PodcastApp />
+        <SlButton variant="default" outline onClick={handleLogOut}>
+      Logout
+    </SlButton>
+        </>
       ) : (
-        <SigninForm onSignIn={handleSignIn} />
+        <Signin onLogin={handleLogin} />
       )}
     </div>
   );
