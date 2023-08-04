@@ -53,6 +53,11 @@ const Podcast = () => {
             <h2>{podcast.title}</h2>
             <h4> {getGenres(podcast.genres)} </h4>
             <h6>Seasons:{podcast.seasons}</h6>
+            <p>Last Updated: {new Date(podcast.updated).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          })}</p>
             <SlDetails summary="Show Description">
               {podcast.description}
             </SlDetails>

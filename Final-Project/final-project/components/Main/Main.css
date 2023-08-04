@@ -34,3 +34,12 @@ p {
   border-radius: 5px;
   margin-bottom: 20px;
 }
+
+.genre-dropdown {
+  width: 200px;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}

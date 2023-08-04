@@ -34,10 +34,6 @@ const Header = () => {
         </ul>
       </nav>
       {/* Button to toggle sorting order */}
-      <div className='searchButton'>
-          <SlInput  type='text'  placeholder='Search Podcast' width='30px'/>
-          <SlButton variant="primary">Search</SlButton>
-      </div>
     </header>
   );
 };
