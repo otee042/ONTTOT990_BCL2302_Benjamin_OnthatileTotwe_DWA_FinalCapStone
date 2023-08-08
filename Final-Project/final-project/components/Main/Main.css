@@ -43,3 +43,35 @@ p {
   border-radius: 5px;
   margin-bottom: 20px;
 }
+
+/* Add styles for sorting buttons */
+.sort-button {
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 0 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.sort-button:hover {
+  background-color: #f2f2f2;
+}
+
+.sort-button.active {
+  background-color: #007bff;
+  color: white;
+}
+
+h2{
+  text-align: center;
+  font-family: 'Courier New', rgb(223, 219, 219);
+}
+
+.loading-message {
+  font-weight: bold;
+  color: #3a53e4; 
+  text-align: center;
+  margin-top: 20px;
+}
