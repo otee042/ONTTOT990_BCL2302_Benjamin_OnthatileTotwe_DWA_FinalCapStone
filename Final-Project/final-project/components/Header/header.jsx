@@ -3,6 +3,7 @@ import "../Header/header.css";
 import { SlButton, SlInput } from '@shoelace-style/shoelace/dist/react';
 import ShowList from "../Main/Shows"; // Import the ShowList component
 
+
 const Header = (
   {
     handleGenreChange,
