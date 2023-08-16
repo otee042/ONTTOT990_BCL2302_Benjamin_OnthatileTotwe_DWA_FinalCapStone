@@ -6,7 +6,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "../Main/Carousel.css";
 import supabase from "../../src/config/supabaseClient";
 
-
+// Array of genres
 const genres = [
   "Personal Growth",
   "True Crime and Investigative Journalism",
@@ -19,8 +19,9 @@ const genres = [
   "Kids and Family",
 ];
 
-// State variables for managing component behavior
+// Podcast component
 const Podcast = ({ selectedGenre }) => {
+  // State variables for managing component behavior
   const [podcasts, setPodcasts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -36,7 +37,6 @@ const Podcast = ({ selectedGenre }) => {
 
   // Base URL for API requests
   const BASE_URL = "https://podcast-api.netlify.app";
-
 
   // Function to fetch detailed information about a podcast
   const fetchShowDetails = async (showId) => {
@@ -64,7 +64,9 @@ const Podcast = ({ selectedGenre }) => {
   // Effect to sort and filter podcasts based on various criteria
   useEffect(() => {
     setIsSorting(true);
+    // Make a copy of the podcasts array to sort and filter
     const sorted = [...podcasts];
+    // Sort podcasts based on title
     sorted.sort((a, b) => {
       const titleA = a.title.toLowerCase();
       const titleB = b.title.toLowerCase();
@@ -75,23 +77,27 @@ const Podcast = ({ selectedGenre }) => {
       }
     });
 
+    // Filter podcasts by genre and search query
     const filteredPodcasts = selectedGenre
       ? sorted.filter((podcast) =>
           podcast.genres.includes(parseInt(selectedGenre))
         )
       : sorted;
-
     const searchFilteredPodcasts = filteredPodcasts.filter((podcast) =>
       podcast.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
+    // Update the sorted podcasts state
     setSortedPodcasts(searchFilteredPodcasts);
     setIsSorting(false);
   }, [podcasts, sortOrder, selectedGenre, searchQuery]);
 
+  // Effect to sort podcasts based on last updated date
   useEffect(() => {
     setIsSorting(true);
+    // Make a copy of the podcasts array to sort
     const sorted = [...podcasts];
+    // Sort podcasts based on last updated date
     sorted.sort((a, b) => {
       const timeA = new Date(a.updated).getTime();
       const timeB = new Date(b.updated).getTime();
@@ -102,12 +108,14 @@ const Podcast = ({ selectedGenre }) => {
       }
     });
 
+    // Filter podcasts by genre
     const filteredPodcasts = selectedGenre
       ? sorted.filter((podcast) =>
           podcast.genres.includes(parseInt(selectedGenre))
         )
       : sorted;
 
+    // Update the sorted podcasts state
     setSortedPodcasts(filteredPodcasts);
     setIsSorting(false);
   }, [podcasts, lastUpdatedSortOrder, selectedGenre]);
@@ -146,25 +154,26 @@ const Podcast = ({ selectedGenre }) => {
     }
   };
 
-  // Render the component's
+  // Render the component
   return (
     <div className="Middle-con">
+      {/* Conditional rendering based on view state */}
       {view === "showList" ? (
+        // Show list view
         <>
+          {/* Carousel of podcasts */}
           <div className="carousel-container">
             <h2>You May be Interested In...</h2>
             <Carousel showArrows={false} infiniteLoop={true} autoPlay={true}>
               {podcasts.map((podcast) => (
                 <div className="carousel-slide" key={podcast.id}>
-                  <img
-                    src={podcast.image}
-                    alt={`Podcast - ${podcast.title}`}
-                  />
+                  <img src={podcast.image} alt={`Podcast - ${podcast.title}`} />
                 </div>
               ))}
             </Carousel>
           </div>
 
+          {/* Search input */}
           <input
             className="search-input"
             type="text"
@@ -173,19 +182,16 @@ const Podcast = ({ selectedGenre }) => {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
 
+          {/* Sort buttons */}
           <button
-            className={`sort-button ${
-              sortOrder === "asc" ? "active" : ""
-            }`}
+            className={`sort-button ${sortOrder === "asc" ? "active" : ""}`}
             onClick={() => setSortOrder("asc")}
             disabled={isLoading || isSorting}
           >
             Sort A-Z
           </button>
           <button
-            className={`sort-button ${
-              sortOrder === "desc" ? "active" : ""
-            }`}
+            className={`sort-button ${sortOrder === "desc" ? "active" : ""}`}
             onClick={() => setSortOrder("desc")}
             disabled={isLoading || isSorting}
           >
@@ -210,6 +216,7 @@ const Podcast = ({ selectedGenre }) => {
             Descending
           </button>
 
+          {/* Podcast list */}
           <div className="podcast-list">
             {isLoading ? (
               <p className="loading-message">Loading podcasts...</p>
@@ -239,21 +246,23 @@ const Podcast = ({ selectedGenre }) => {
                     })}
                   </p>
                   <div>
+                    {/* Toggle favorite button */}
                     <button
                       onClick={() => {
-                        toggleFavorite(podcast.id)
-                        
+                        toggleFavorite(podcast.id);
+
+                        // Add to favorites in Supabase
                         const addFav = async () => {
                           const { data, error } = await supabase
-                            .from('favourites')
+                            .from("favourites")
                             .insert({
                               title: podcast.title,
                               image: podcast.image,
                               description: podcast.description,
-                              time: podcast.lastUpdatedSortOrder
-                            })
-                        }
-                        addFav()
+                              time: podcast.lastUpdatedSortOrder,
+                            });
+                        };
+                        addFav();
                       }}
                       className={
                         favorites.includes(podcast.id)
@@ -266,6 +275,7 @@ const Podcast = ({ selectedGenre }) => {
                         : "Add to Favorites"}
                     </button>
                   </div>
+                  {/* Show description */}
                   <SlDetails summary="Show Description">
                     {podcast.description}
                   </SlDetails>
@@ -275,6 +285,7 @@ const Podcast = ({ selectedGenre }) => {
           </div>
         </>
       ) : (
+        // Show detail view
         <div className="show-detail-container">
           <button
             className="back-button"
@@ -283,6 +294,7 @@ const Podcast = ({ selectedGenre }) => {
             Back to Show List
           </button>
           <div>
+            {/* Selected show details */}
             <h2>{selectedShow.title}</h2>
             {selectedShow.seasons &&
               selectedShow.seasons.map((season) => (
@@ -302,6 +314,7 @@ const Podcast = ({ selectedGenre }) => {
                       View Episodes
                     </button>
                   </div>
+                  {/* Episode list */}
                   {selectedSeason === season.number && (
                     <ul className="episode-list">
                       {season.episodes.map((episode) => (
@@ -322,6 +335,7 @@ const Podcast = ({ selectedGenre }) => {
         </div>
       )}
 
+      {/* Favorite podcasts */}
       <div className="favorite-podcasts">
         <h2>Your Favorite Podcasts</h2>
         <div className="favorite-sort">
@@ -364,6 +378,7 @@ const Podcast = ({ selectedGenre }) => {
                   alt={favoritePodcast.title}
                 />
                 <h3>{favoritePodcast.title}</h3>
+                {/* Toggle favorite button */}
                 <button
                   onClick={() => toggleFavorite(favoritePodcast.id)}
                   className={
