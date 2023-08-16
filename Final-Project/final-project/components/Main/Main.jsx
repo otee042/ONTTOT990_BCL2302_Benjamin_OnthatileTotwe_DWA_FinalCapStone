@@ -112,6 +112,7 @@ const Podcast = ({ selectedGenre }) => {
     setIsSorting(false);
   }, [podcasts, lastUpdatedSortOrder, selectedGenre]);
 
+  // Function to get human-readable genre names
   const getGenres = (genreIds) => {
     if (!Array.isArray(genreIds)) {
       genreIds = [genreIds];
@@ -119,6 +120,7 @@ const Podcast = ({ selectedGenre }) => {
     return genreIds.map((id) => genres[id - 1]).join(",");
   };
 
+  // Function to handle clicks on a podcast show
   const handleShowClick = async (show) => {
     try {
       const showDetails = await fetchShowDetails(show.id);
@@ -130,10 +132,12 @@ const Podcast = ({ selectedGenre }) => {
     }
   };
 
+  // Function to handle click on a season to view episodes
   const handleSeasonClick = (seasonNumber) => {
     setSelectedSeason(seasonNumber);
   };
 
+  // Function to toggle a podcast as favorite
   const toggleFavorite = (podcastId) => {
     if (favorites.includes(podcastId)) {
       setFavorites(favorites.filter((id) => id !== podcastId));
@@ -142,6 +146,7 @@ const Podcast = ({ selectedGenre }) => {
     }
   };
 
+  // Render the component's
   return (
     <div className="Middle-con">
       {view === "showList" ? (
