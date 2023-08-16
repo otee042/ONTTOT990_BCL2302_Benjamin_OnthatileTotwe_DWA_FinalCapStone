@@ -4,6 +4,8 @@ import { SlDetails } from "@shoelace-style/shoelace/dist/react";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "../Main/Carousel.css";
+import supabase from "../../src/config/supabaseClient";
+
 
 const genres = [
   "Personal Growth",
@@ -17,6 +19,7 @@ const genres = [
   "Kids and Family",
 ];
 
+// State variables for managing component behavior
 const Podcast = ({ selectedGenre }) => {
   const [podcasts, setPodcasts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -28,14 +31,18 @@ const Podcast = ({ selectedGenre }) => {
   const [view, setView] = useState("showList");
   const [selectedShow, setSelectedShow] = useState(null);
   const [selectedSeason, setSelectedSeason] = useState(null);
+  const [favorites, setFavorites] = useState([]);
+  const [favoriteSortOrder, setFavoriteSortOrder] = useState("asc");
 
+  // Base URL for API requests
   const BASE_URL = "https://podcast-api.netlify.app";
 
+
+  // Function to fetch detailed information about a podcast
   const fetchShowDetails = async (showId) => {
     try {
       const response = await fetch(`${BASE_URL}/id/${showId}`);
       const data = await response.json();
-      // Make sure seasons property exists and is an array
       data.seasons = data.seasons || [];
       return data;
     } catch (error) {
@@ -43,6 +50,7 @@ const Podcast = ({ selectedGenre }) => {
     }
   };
 
+  // Effect to fetch podcast data when the component mounts
   useEffect(() => {
     setIsLoading(true);
     fetch("https://podcast-api.netlify.app/shows")
@@ -53,6 +61,7 @@ const Podcast = ({ selectedGenre }) => {
       });
   }, []);
 
+  // Effect to sort and filter podcasts based on various criteria
   useEffect(() => {
     setIsSorting(true);
     const sorted = [...podcasts];
@@ -72,9 +81,13 @@ const Podcast = ({ selectedGenre }) => {
         )
       : sorted;
 
-    setSortedPodcasts(filteredPodcasts);
+    const searchFilteredPodcasts = filteredPodcasts.filter((podcast) =>
+      podcast.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    setSortedPodcasts(searchFilteredPodcasts);
     setIsSorting(false);
-  }, [podcasts, sortOrder, selectedGenre]);
+  }, [podcasts, sortOrder, selectedGenre, searchQuery]);
 
   useEffect(() => {
     setIsSorting(true);
@@ -110,7 +123,7 @@ const Podcast = ({ selectedGenre }) => {
     try {
       const showDetails = await fetchShowDetails(show.id);
       setSelectedShow(showDetails);
-      setSelectedSeason(null); // Add this line to reset selectedSeason
+      setSelectedSeason(null);
       setView("showDetail");
     } catch (error) {
       console.error("Error loading show details:", error);
@@ -119,6 +132,14 @@ const Podcast = ({ selectedGenre }) => {
 
   const handleSeasonClick = (seasonNumber) => {
     setSelectedSeason(seasonNumber);
+  };
+
+  const toggleFavorite = (podcastId) => {
+    if (favorites.includes(podcastId)) {
+      setFavorites(favorites.filter((id) => id !== podcastId));
+    } else {
+      setFavorites([...favorites, podcastId]);
+    }
   };
 
   return (
@@ -134,7 +155,6 @@ const Podcast = ({ selectedGenre }) => {
                     src={podcast.image}
                     alt={`Podcast - ${podcast.title}`}
                   />
-
                 </div>
               ))}
             </Carousel>
@@ -149,14 +169,18 @@ const Podcast = ({ selectedGenre }) => {
           />
 
           <button
-            className={`sort-button ${sortOrder === "asc" ? "active" : ""}`}
+            className={`sort-button ${
+              sortOrder === "asc" ? "active" : ""
+            }`}
             onClick={() => setSortOrder("asc")}
             disabled={isLoading || isSorting}
           >
             Sort A-Z
           </button>
           <button
-            className={`sort-button ${sortOrder === "desc" ? "active" : ""}`}
+            className={`sort-button ${
+              sortOrder === "desc" ? "active" : ""
+            }`}
             onClick={() => setSortOrder("desc")}
             disabled={isLoading || isSorting}
           >
@@ -169,7 +193,7 @@ const Podcast = ({ selectedGenre }) => {
             onClick={() => setLastUpdatedSortOrder("asc")}
             disabled={isLoading || isSorting}
           >
-            Sort Oldest First
+            Ascending
           </button>
           <button
             className={`sort-button ${
@@ -178,12 +202,14 @@ const Podcast = ({ selectedGenre }) => {
             onClick={() => setLastUpdatedSortOrder("desc")}
             disabled={isLoading || isSorting}
           >
-            Sort Newest First
+            Descending
           </button>
 
           <div className="podcast-list">
             {isLoading ? (
               <p className="loading-message">Loading podcasts...</p>
+            ) : sortedPodcasts.length === 0 ? (
+              <p className="loading-message">No podcasts found.</p>
             ) : (
               sortedPodcasts.map((podcast) => (
                 <div key={podcast.id} className="podcast-card">
@@ -193,7 +219,10 @@ const Podcast = ({ selectedGenre }) => {
                   <h2>{podcast.title}</h2>
                   <h4>{getGenres(podcast.genres)}</h4>
                   <h6>Seasons: {podcast.seasons}</h6>
-                  <button onClick={() => handleShowClick(podcast)}>
+                  <button
+                    className="view-seasons-button"
+                    onClick={() => handleShowClick(podcast)}
+                  >
                     View Seasons
                   </button>
                   <p>
@@ -204,6 +233,34 @@ const Podcast = ({ selectedGenre }) => {
                       day: "numeric",
                     })}
                   </p>
+                  <div>
+                    <button
+                      onClick={() => {
+                        toggleFavorite(podcast.id)
+                        
+                        const addFav = async () => {
+                          const { data, error } = await supabase
+                            .from('favourites')
+                            .insert({
+                              title: podcast.title,
+                              image: podcast.image,
+                              description: podcast.description,
+                              time: podcast.lastUpdatedSortOrder
+                            })
+                        }
+                        addFav()
+                      }}
+                      className={
+                        favorites.includes(podcast.id)
+                          ? "favorite active"
+                          : "favorite"
+                      }
+                    >
+                      {favorites.includes(podcast.id)
+                        ? "Remove from Favorites"
+                        : "Add to Favorites"}
+                    </button>
+                  </div>
                   <SlDetails summary="Show Description">
                     {podcast.description}
                   </SlDetails>
@@ -214,12 +271,17 @@ const Podcast = ({ selectedGenre }) => {
         </>
       ) : (
         <div className="show-detail-container">
-          <button onClick={() => setView("showList")}>Back to Show List</button>
+          <button
+            className="back-button"
+            onClick={() => setView("showList")}
+          >
+            Back to Show List
+          </button>
           <div>
             <h2>{selectedShow.title}</h2>
             {selectedShow.seasons &&
               selectedShow.seasons.map((season) => (
-                <div key={season.number}>
+                <div className="season-container" key={season.number}>
                   <h3>Season {season.number}</h3>
                   <div className="image--">
                     <img
@@ -229,13 +291,14 @@ const Podcast = ({ selectedGenre }) => {
                     />
                     <div>{season.episodes.length} Episodes</div>
                     <button
+                      className="view-episodes-button"
                       onClick={() => handleSeasonClick(season.number)}
                     >
                       View Episodes
                     </button>
                   </div>
                   {selectedSeason === season.number && (
-                    <ul>
+                    <ul className="episode-list">
                       {season.episodes.map((episode) => (
                         <Fragment key={episode.id}>
                           <h4>{episode.name}</h4>
@@ -253,9 +316,67 @@ const Podcast = ({ selectedGenre }) => {
           </div>
         </div>
       )}
+
+      <div className="favorite-podcasts">
+        <h2>Your Favorite Podcasts</h2>
+        <div className="favorite-sort">
+          <label htmlFor="favoriteSortOrder">Sort by: </label>
+          <select
+            id="favoriteSortOrder"
+            value={favoriteSortOrder}
+            onChange={(e) => setFavoriteSortOrder(e.target.value)}
+          >
+            <option value="asc">A-Z</option>
+            <option value="desc">Z-A</option>
+            <option value="asc-last-updated">Oldest Last Updated</option>
+            <option value="desc-last-updated">Newest Last Updated</option>
+          </select>
+        </div>
+        {favorites
+          .slice()
+          .sort((a, b) => {
+            const podcastA = podcasts.find((podcast) => podcast.id === a);
+            const podcastB = podcasts.find((podcast) => podcast.id === b);
+
+            if (favoriteSortOrder === "asc") {
+              return podcastA.title.localeCompare(podcastB.title);
+            } else if (favoriteSortOrder === "desc") {
+              return podcastB.title.localeCompare(podcastA.title);
+            } else if (favoriteSortOrder === "asc-last-updated") {
+              return new Date(podcastA.updated) - new Date(podcastB.updated);
+            } else if (favoriteSortOrder === "desc-last-updated") {
+              return new Date(podcastB.updated) - new Date(podcastA.updated);
+            }
+          })
+          .map((favoriteId) => {
+            const favoritePodcast = podcasts.find(
+              (podcast) => podcast.id === favoriteId
+            );
+            return (
+              <div key={favoritePodcast.id} className="favorite-podcast">
+                <img
+                  src={favoritePodcast.image}
+                  alt={favoritePodcast.title}
+                />
+                <h3>{favoritePodcast.title}</h3>
+                <button
+                  onClick={() => toggleFavorite(favoritePodcast.id)}
+                  className={
+                    favorites.includes(favoritePodcast.id)
+                      ? "favorite active"
+                      : "favorite"
+                  }
+                >
+                  {favorites.includes(favoritePodcast.id)
+                    ? "Remove from Favorites"
+                    : "Add to Favorites"}
+                </button>
+              </div>
+            );
+          })}
+      </div>
     </div>
   );
 };
 
 export default Podcast;
-  
